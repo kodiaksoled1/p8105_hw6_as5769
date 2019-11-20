@@ -1,0 +1,6 @@
+---
+title: "Homework 6"
+author: "Kodiak Soled"
+date: "11/19/2019"
+output: github_document
+---
