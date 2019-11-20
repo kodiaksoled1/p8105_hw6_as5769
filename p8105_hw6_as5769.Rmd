@@ -181,3 +181,25 @@ cv_df %>%
 _Description_ 
 
 My proposed regression model 1 is the clear winner as it has the lowest prediction error distribution among the three models.
+
+## Problem 2
+
+#### Data Import & Cleaning
+
+Loading in the The 2017 Central Park Weather Dataset.
+
+```{r message = FALSE}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+
+set.seed(1)
+```
