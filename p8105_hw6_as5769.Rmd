@@ -55,26 +55,37 @@ birthweight =
   mutate_if(is.numeric, round, 2)
 ```
 
-## Problem 1
+#### Proposed Model
 
-#### Data Import & Cleaning
+Creating a proposed regression model using 13 out of the 20 predictors: babysex, bhead, blength, delwt, fincome, gaweeks, malform, menarche, mheight, momage,  mrace, ppbmi, smoken.
 
-Loading in the Birthweight Dataset and cleaning the data including: 
+```{r}
+model_1 = 
+  lm(bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + malform + menarche + mheight + momage + mrace + ppbmi + smoken, data = birthweight) 
 
-* reading in the csv file (`read_csv`)
-* cleaning names (`janitor::clean_names`)
-* mutating catagorical variables that are numeric to factor variables (`as.factor`)
-* rounding numeric variables to the second decimal place
+model_1 %>% 
+  broom::glance() %>%
+  knitr::kable(caption = "Regression Model 1 Summary")
+```
 
-```{r message = FALSE}
-birthweight =
-  read_csv("./data/birthweight.csv") %>%
-  janitor::clean_names() %>%
-  mutate(
-    babysex = as.factor(babysex),
-    frace = as.factor(frace),
-    mrace = as.factor(mrace),
-    malform = as.factor(malform)
-  ) %>%
-  mutate_if(is.numeric, round, 2)
+_Process of Modeling_
+
+I used a data-driven model-building process of stepwise deletion to come up with my proposed regression model. To do this, I first included every predictor in the model. Then, one by one , I deleted each predictor from the model and evaluated its effect on the AIC: if deleting the predictor raised the AIC I kept it in the model, and if deleting the predictor lowered the AIC I took it out of the model. The resulting model includes the only the predictors that resulted in the lowest AIC.
+
+#### Plotting Residuals vs. Fitted Values
+
+Creating a scatterplot (`geom_point`) of the proposed regression model's residuals against its fitted (predicted) values using the `add_residuals` and `add_predictions` functions from the `modelr` package, then drawing a linear regression line through the plot using `geom_smooth`.
+
+```{r}
+birthweight %>% 
+  modelr::add_residuals(model_1) %>% 
+  modelr::add_predictions(model_1) %>%
+  ggplot(aes(x = pred, y = resid)) + 
+  geom_point() +
+  geom_smooth(se = FALSE, method = "lm", color = "blue") +
+  labs(
+    title = "Plot of Model Residuals against Fitted Values",
+    x = "Fitted Values", 
+    y = "Residuals"
+  )
 ```
