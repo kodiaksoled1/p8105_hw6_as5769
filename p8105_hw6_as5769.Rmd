@@ -266,3 +266,21 @@ conf_interval_r_squared %>%
   ) %>%
   knitr::kable(caption = "95% Confidence Interval for r̂^2")
 ```
+
+#### Plot Distribution of log(β̂0*β̂1) and r̂^2
+
+Plotting the distribution of log(β̂0*β̂1) for the 5,000 bootstrap samples with its associated 95% confidence interval by taking the "conf_interval_log" dataframe created above and the making a density plot (`geom_density`), incluidng using `geom_vline` to plot the 2.5% and 97.5% quantiles.
+
+```{r}
+conf_interval_log %>%
+  ggplot(aes(x = log_intercept_tmin)) +
+  geom_density() +
+  geom_vline(xintercept = 1.97, color = "blue") +
+  geom_vline(xintercept = 2.06, color = "blue") +
+  labs(
+    title = "Distribution of log(β̂0*β̂1) for the 5,000 Bootstrap Sample with 95% Confidence Intervals",
+    x = "log(β̂0*β̂1)",
+    y = "Density",
+    caption = "Data from The 2017 Central Park Weather Dataset"
+  )
+```
