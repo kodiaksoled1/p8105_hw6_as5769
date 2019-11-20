@@ -54,3 +54,27 @@ birthweight =
   ) %>%
   mutate_if(is.numeric, round, 2)
 ```
+
+## Problem 1
+
+#### Data Import & Cleaning
+
+Loading in the Birthweight Dataset and cleaning the data including: 
+
+* reading in the csv file (`read_csv`)
+* cleaning names (`janitor::clean_names`)
+* mutating catagorical variables that are numeric to factor variables (`as.factor`)
+* rounding numeric variables to the second decimal place
+
+```{r message = FALSE}
+birthweight =
+  read_csv("./data/birthweight.csv") %>%
+  janitor::clean_names() %>%
+  mutate(
+    babysex = as.factor(babysex),
+    frace = as.factor(frace),
+    mrace = as.factor(mrace),
+    malform = as.factor(malform)
+  ) %>%
+  mutate_if(is.numeric, round, 2)
+```
