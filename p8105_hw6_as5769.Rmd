@@ -90,6 +90,10 @@ birthweight %>%
   )
 ```
 
+_Description_
+
+The residuals and fitted values are approximately equal to one another, with the exception of a few outliers.
+
 #### Comparing Models
 
 Creating linear models for the two other models in the homework instructions in order to compare them to my proposed model.
@@ -214,7 +218,7 @@ Identifing the 2.5% and 97.5% quantiles to provide a 95% confidence interval for
 * pivoting the table wider in preparation for multiplying β̂0*β̂
 * cleaning (`janitor::clean_names`) the name of the variables (need it for the next line of code)
 * creating a new variable using `mutate` that takes the log of β̂0*β̂
-* creating the 2.5% and 97.5% `quantile`for log(β̂0**β̂) under the `summarize` function
+* creating the 2.5% and 97.5% `quantile`for log10(β̂0**β̂) under the `summarize` function
 * putting the confidence interval into a reader-friendly table using `knitr::kable`
 
 ```{r}
@@ -234,7 +238,7 @@ conf_interval_log =
   ) %>%
   janitor::clean_names() %>%
   mutate(
-    log_intercept_tmin = log(intercept * tmin)
+    log_intercept_tmin = log10(intercept * tmin)
   )
 
 conf_interval_log %>%  
@@ -242,10 +246,14 @@ conf_interval_log %>%
     lower_CI = quantile(log_intercept_tmin, c(.025)),
     upper_CI = quantile(log_intercept_tmin, c(.975))
   ) %>%
-  knitr::kable(caption = "95% Confidence Interval for log(β̂0*β̂1)")
+  knitr::kable(caption = "95% Confidence Interval for log10(β̂0*β̂1)")
 ```
 
-Identifing the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r̂^2 using the same steps as just list (except omiting the creation of the log(β̂0^β̂) variable and instead calculating the quantiles for r̂^2).
+_Description_
+
+The 95% confidence interval for log10(β̂0^β̂) is 0.853 to 0.894.
+
+Identifing the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r̂^2 using the same steps as just list (except omiting the creation of the log10(β̂0^β̂) variable and instead calculating the quantiles for r̂^2).
 
 ```{r}
 conf_interval_r_squared = 
@@ -267,19 +275,23 @@ conf_interval_r_squared %>%
   knitr::kable(caption = "95% Confidence Interval for r̂^2")
 ```
 
-#### Plot Distribution of log(β̂0*β̂1) and r̂^2
+_Description_
 
-Plotting the distribution of log(β̂0*β̂1) for the 5,000 bootstrap samples with its associated 95% confidence interval by taking the "conf_interval_log" dataframe created above and the making a density plot (`geom_density`), incluidng using `geom_vline` to plot the 2.5% and 97.5% quantiles.
+The 95% confidence interval for r-squared is 0.893 to 0.927.
+
+#### Plot Distribution of log10(β̂0*β̂1) and r̂^2
+
+Plotting the distribution of log10(β̂0*β̂1) for the 5,000 bootstrap samples with its associated 95% confidence interval by taking the "conf_interval_log" dataframe created above and the making a density plot (`geom_density`), incluidng using `geom_vline` to plot the 2.5% and 97.5% quantiles.
 
 ```{r}
 conf_interval_log %>%
   ggplot(aes(x = log_intercept_tmin)) +
   geom_density() +
-  geom_vline(xintercept = 1.97, color = "blue") +
-  geom_vline(xintercept = 2.06, color = "blue") +
+  geom_vline(xintercept = 0.853, color = "blue") +
+  geom_vline(xintercept = 0.894, color = "blue") +
   labs(
-    title = "Distribution of log(β̂0*β̂1) for the 5,000 Bootstrap Sample with 95% Confidence Intervals",
-    x = "log(β̂0*β̂1)",
+    title = "Distribution of log10(β̂0*β̂1) for the 5,000 Bootstrap Sample with 95% Confidence Intervals",
+    x = "log10(β̂0*β̂1)",
     y = "Density",
     caption = "Data from The 2017 Central Park Weather Dataset"
   )
@@ -303,4 +315,4 @@ conf_interval_r_squared %>%
 
 _Description_
 
-The two plots both have a fairly symmetrical distributions with a single peak. The mean of the log(β̂0*β̂1) distribution centers around 2.01 and the mean of the r̂^2 distribution centers around 0.91.
+The two plots both have a fairly symmetrical distributions with a single peak. The mean of the log10(β̂0*β̂1) distribution centers around 0.88 and the mean of the r̂^2 distribution centers around 0.91.
